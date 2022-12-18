@@ -89,7 +89,7 @@ function App() {
           {isMuted && <p>Muted</p>}
           <p>{type}</p>
           <NumberInput value={timePeriods} increment={incrementTimePeriods} decrement={decrementTimePeriods}></NumberInput>
-          <p>End time: {timeToEnd(timePeriods)}</p>
+          {timePeriods > 0 && <p>End time: {timeToEnd(timePeriods)}</p>}
           <div>
             <button onClick={resetTimePeriods}>Reset</button>
             <button onClick={toggleMute}>{isMuted ? "Unmute" : "Mute"}</button>
