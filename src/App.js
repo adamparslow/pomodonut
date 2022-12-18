@@ -22,12 +22,6 @@ const colours = {
   }
 }
 
-/**
- * TODO: 
- * - Start button
- * - Have timer stop when time runs out
- */
-
 function App() {
   const [time, setTime] = useState(Date.now());
   const [percentage, setPercentage] = useState(0);

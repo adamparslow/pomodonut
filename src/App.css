@@ -17,9 +17,11 @@ html, body {
 }
 
 .container { 
-  width: 50vw;
-  height: 50vw;
-  border-radius: 25vw;
+  width: 90vw;
+  max-width: 700px;
+  height: 90vw;
+  max-height: 700px;
+  border-radius: 50%;
 
   display:flex;
   flex-direction: column;
@@ -28,9 +30,9 @@ html, body {
 }
 
 .inner {
-  width:40vw;
-  height:40vw;
-  border-radius: 20vw;
+  width:80%;
+  height:80%;
+  border-radius: 50%;
   
   display: flex;
   flex-direction: column;
