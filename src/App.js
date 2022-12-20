@@ -39,7 +39,6 @@ function App() {
   const link = document.querySelector("link[rel~='icon']");
   link.href = type === WORK ? "orangeCircle.png" : "greenCircle.png";
 
-
   useEffect(() => {
     if (type === WORK) {
       decrementTimePeriods();
@@ -53,7 +52,7 @@ function App() {
     console.log(timePeriods);
     console.log(isMuted || timePeriods === 0);
     if (isMuted || timePeriods === 0) return;
-    const audio = new Audio('alert.mp3');
+    const audio = new Audio(process.env.PUBLIC_URL + '/alert.mp3');
     audio.volume = 1;
     audio.play();
   }
@@ -83,6 +82,7 @@ function App() {
             <button onClick={resetTimePeriods}>Reset</button>
             <button onClick={toggleMute}>{isMuted ? "Unmute" : "Mute"}</button>
           </div>
+          <button onClick={playSound}>PlaySound</button>
         </div>
       </TimerWheel>
     </div>
