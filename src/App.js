@@ -5,6 +5,7 @@ import NumberInput from './NumberInput';
 import useTimePeriods from './hooks/useTimePeriods';
 import useIsMuted from './hooks/useIsMuted';
 import useTime from './hooks/useTime';
+import alert from './alert.mp3';
 
 const BREAK = "Break";
 const WORK = "Work";
@@ -52,7 +53,7 @@ function App() {
     console.log(timePeriods);
     console.log(isMuted || timePeriods === 0);
     if (isMuted || timePeriods === 0) return;
-    const audio = new Audio(process.env.PUBLIC_URL + '/alert.mp3');
+    const audio = new Audio(alert);
     audio.volume = 1;
     audio.play();
   }
