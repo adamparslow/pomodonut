@@ -81,7 +81,6 @@ function App() {
             <button onClick={resetTimePeriods}>Reset</button>
             <button onClick={toggleMute}>{isMuted ? "Unmute" : "Mute"}</button>
           </div>
-          <button onClick={playSound}>PlaySound</button>
         </div>
       </TimerWheel>
     </div>
