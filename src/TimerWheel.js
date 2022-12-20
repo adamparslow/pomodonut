@@ -4,8 +4,7 @@ import { useRef } from "react";
 const Wheel = styled.div`
   width: 90vw;
   max-width: 700px;
-  height: 90vw;
-  max-height: 700px;
+  aspect-ratio: 1;
   border-radius: 50%;
 
   position: relative;

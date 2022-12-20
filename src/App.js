@@ -31,10 +31,14 @@ const colours = {
 const Background = styled.div`
   height: 100vh;
   width: 100vw;
-  
+
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  @media only screen and (max-width: 700px) {
+    flex-direction: column-reverse;
+  }
 `;
 
 const Inner = styled.div`
@@ -63,19 +67,25 @@ const TimerTitle = styled.h1`
 `;
 
 const ButtonTray = styled.div`
-  align-self: flex-end;
   display: flex;
-  gap: 30px;
-  width: 220px;
+  gap: 40px;
   margin: 30px;
+
+  @media only screen and (min-width: 701px) {
+    align-self: flex-end;
+    width: 220px;
+  }
 `;
 
 const EndTime = styled.p`
-  align-self: flex-end;
   font-size: 1.5em;
-  width: 220px;
-  text-align: right;
+  text-align: center;
   margin: 30px;
+
+  @media only screen and (min-width: 701px) {
+    align-self: flex-end;
+    width: 220px;
+  }
 `;
 
 function App() {
