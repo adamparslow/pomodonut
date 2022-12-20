@@ -38,7 +38,7 @@ const Circle = styled.div`
 `;
 
 function TimerWheel(props) {
-   const percentage = 1 - ((1 - props.percentage) * 0.98);
+   const percentage = props.percentage;
    const degree = (percentage * 360 + 90) % 360;
 
    const wheelColour = props.wheelColour;

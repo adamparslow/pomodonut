@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 
-const BREAK = "Break";
-const WORK = "Work";
+const BREAK = "BREAK";
+const WORK = "WORK";
 
 const WORK_LIMIT = 25 * 60;
 const BREAK_LIMIT = 5 * 60;

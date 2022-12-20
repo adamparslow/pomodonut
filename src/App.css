@@ -5,41 +5,6 @@ html, body {
   height: 100vh;
   width: 100vw;
 
-}
+  font-family: 'Arial Rounded MT Bold', sans-serif;
 
-.background {
-  height: 100vh;
-  width: 100vw;
-  
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.container { 
-  width: 90vw;
-  max-width: 700px;
-  height: 90vw;
-  max-height: 700px;
-  border-radius: 50%;
-
-  display:flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-.inner {
-  width:80%;
-  height:80%;
-  border-radius: 50%;
-  
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-.numberInputContainer {
-  display: flex;
 }
