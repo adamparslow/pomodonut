@@ -6,6 +6,10 @@ import useTimePeriods from './hooks/useTimePeriods';
 import useIsMuted from './hooks/useIsMuted';
 import useTime from './hooks/useTime';
 import { alert } from './playSound';
+import styled from 'styled-components';
+import Button from './Button';
+import { IoVolumeMute, IoVolumeHigh, IoReloadCircleOutline } from 'react-icons/io5';
+import { RxReload } from 'react-icons/rx';
 
 const BREAK = "Break";
 const WORK = "Work";
@@ -15,16 +19,56 @@ const BREAK_LIMIT = 5 * 60;
 
 const colours = {
   "Work": {
-    center: "#ff0000",
+    // center: "#ff0000",
+    center: '#FFFFFF',
     timer: "#ff7400",
     background: "#ffc100"
   },
   "Break": {
-    center: "#1E5631",
+    // center: "#1E5631",
+    center: '#FFFFFF',
     timer: "#A4DE02",
     background: "#76BA1B"
   }
 }
+
+const Background = styled.div`
+  height: 100vh;
+  width: 100vw;
+  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const Inner = styled.div`
+  width:90%;
+  height:90%;
+  border-radius: 50%;
+  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+`;
+
+const TypeTitle = styled.h1`
+  font-size: 3em;
+  margin:0;
+`;
+
+const TimerTitle = styled.h1`
+  font-family: monospace;
+  font-size: 5em;
+  margin:0;
+  margin-bottom: 10px;
+`;
+
+const ButtonTray = styled.div`
+  width: 15%;
+  display: flex;
+  justify-content: space-between;
+`;
 
 function App() {
   const [type, setType] = useState("Work");
@@ -36,7 +80,7 @@ function App() {
 
   const percentage = type === WORK ?
     1 - time / WORK_LIMIT :
-    1 - time / BREAK_LIMIT;
+    1 - time / BREAK_LIMIT
   const link = document.querySelector("link[rel~='icon']");
   link.href = type === WORK ? "orangeCircle.png" : "greenCircle.png";
 
@@ -69,21 +113,22 @@ function App() {
   }
 
   return (
-    <div className='background' style={{ backgroundColor: backgroundColour() }}>
+    <Background style={{ backgroundColor: backgroundColour() }}>
       <TimerWheel percentage={percentage} wheelColour={timerColour()} backgroundColour={backgroundColour()}>
-        <div className="inner" style={{ backgroundColor: centerColour() }}>
-          <h1>{timeText}</h1>
-          {isMuted && <p>Muted</p>}
-          <p>{type}</p>
+        <Inner style={{ backgroundColor: centerColour() }}>
+          <TypeTitle>{type}</TypeTitle>
+          <TimerTitle>{timeText}</TimerTitle>
           <NumberInput value={timePeriods} increment={incrementTimePeriods} decrement={decrementTimePeriods}></NumberInput>
-          {timePeriods > 0 && <p>End time: {timeToEnd}</p>}
-          <div>
-            <button onClick={resetTimePeriods}>Reset</button>
-            <button onClick={toggleMute}>{isMuted ? "Unmute" : "Mute"}</button>
-          </div>
-        </div>
+          <p>End time: {timePeriods > 0 ? timeToEnd : "00:00"}</p>
+          <ButtonTray>
+            <Button onClick={resetTimePeriods}><RxReload /></Button>
+            <Button onClick={toggleMute}>
+              {isMuted ? <IoVolumeMute /> : <IoVolumeHigh />}
+            </Button>
+          </ButtonTray>
+        </Inner>
       </TimerWheel>
-    </div>
+    </Background>
   );
 }
 
