@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { useRef } from "react";
 
 const Wheel = styled.div`
   width: 90vw;
@@ -44,10 +45,19 @@ function TimerWheel(props) {
    const wheelColour = props.wheelColour;
    const backgroundColour = props.backgroundColour;
 
-   const [top, left] = calculateCirclePos(percentage, 323.9);
+   const wheelRef = useRef();
+   const circleRef = useRef();
+   console.log(wheelRef);
+   console.log(circleRef);
+
+   let radius = 323.9;
+   if (wheelRef.current) {
+      radius = (wheelRef.current.offsetWidth - circleRef.current.offsetWidth) / 2;
+   }
+   const [top, left] = calculateCirclePos(percentage, radius);
 
    return (
-      <Wheel style={
+      <Wheel ref={wheelRef} style={
          {
             background: percentage <= 0.5 ?
                `linear-gradient(${degree}deg, transparent 50%, ${wheelColour} 50%),
@@ -62,7 +72,7 @@ function TimerWheel(props) {
                top: 0
             }
          }></Circle>
-         <Circle style={
+         <Circle ref={circleRef} style={
             {
                backgroundColor: wheelColour,
                top: top,
