@@ -49,6 +49,9 @@ function App() {
   }, [type]);
 
   const playSound = () => {
+    console.log(isMuted);
+    console.log(timePeriods);
+    console.log(isMuted || timePeriods === 0);
     if (isMuted || timePeriods === 0) return;
     const audio = new Audio('alert.mp3');
     audio.volume = 1;
