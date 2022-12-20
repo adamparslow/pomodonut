@@ -15,9 +15,9 @@ const Number = styled.p`
 export default function NumberInput(props) {
    return (
       <Container>
-         <Button onClick={props.increment}>+</Button>
+         <Button colour={props.colour} onClick={props.increment}>+</Button>
          <Number>{props.value}</Number>
-         <Button onClick={props.decrement}>-</Button>
+         <Button colour={props.colour} onClick={props.decrement}>-</Button>
       </Container>
    )
 }

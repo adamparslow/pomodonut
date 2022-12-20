@@ -19,15 +19,11 @@ const BREAK_LIMIT = 5 * 60;
 
 const colours = {
   "Work": {
-    // center: "#ff0000",
-    center: '#FFFFFF',
-    timer: "#ff7400",
+    primary: "#ff7400",
     background: "#ffc100"
   },
   "Break": {
-    // center: "#1E5631",
-    center: '#FFFFFF',
-    timer: "#A4DE02",
+    primary: "#A4DE02",
     background: "#76BA1B"
   }
 }
@@ -37,7 +33,7 @@ const Background = styled.div`
   width: 100vw;
   
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
 `;
 
@@ -45,6 +41,7 @@ const Inner = styled.div`
   width:90%;
   height:90%;
   border-radius: 50%;
+  background-color: white;
   
   display: flex;
   flex-direction: column;
@@ -62,12 +59,23 @@ const TimerTitle = styled.h1`
   font-size: 5em;
   margin:0;
   margin-bottom: 10px;
+  color: ${props => props.colour};
 `;
 
 const ButtonTray = styled.div`
-  width: 15%;
+  align-self: flex-end;
   display: flex;
-  justify-content: space-between;
+  gap: 30px;
+  width: 220px;
+  margin: 30px;
+`;
+
+const EndTime = styled.p`
+  align-self: flex-end;
+  font-size: 1.5em;
+  width: 220px;
+  text-align: right;
+  margin: 30px;
 `;
 
 function App() {
@@ -93,41 +101,29 @@ function App() {
   }, [type]);
 
   const playSound = () => {
-    console.log(isMuted);
-    console.log(timePeriods);
-    console.log(isMuted || timePeriods === 0);
     if (isMuted || timePeriods === 0) return;
     alert();
   }
 
-  const backgroundColour = () => {
-    return colours[type].background;
-  };
-
-  const timerColour = () => {
-    return colours[type].timer;
-  }
-
-  const centerColour = () => {
-    return colours[type].center;
-  }
+  const background = colours[type].background;
+  const primary = colours[type].primary;
 
   return (
-    <Background style={{ backgroundColor: backgroundColour() }}>
-      <TimerWheel percentage={percentage} wheelColour={timerColour()} backgroundColour={backgroundColour()}>
-        <Inner style={{ backgroundColor: centerColour() }}>
+    <Background style={{ backgroundColor: background }}>
+      <ButtonTray>
+        <Button colour={primary} onClick={resetTimePeriods}><RxReload /></Button>
+        <Button colour={primary} onClick={toggleMute}>
+          {isMuted ? <IoVolumeMute /> : <IoVolumeHigh />}
+        </Button>
+      </ButtonTray>
+      <TimerWheel percentage={percentage} wheelColour={primary} backgroundColour={background}>
+        <Inner>
           <TypeTitle>{type}</TypeTitle>
-          <TimerTitle>{timeText}</TimerTitle>
-          <NumberInput value={timePeriods} increment={incrementTimePeriods} decrement={decrementTimePeriods}></NumberInput>
-          <p>End time: {timePeriods > 0 ? timeToEnd : "00:00"}</p>
-          <ButtonTray>
-            <Button onClick={resetTimePeriods}><RxReload /></Button>
-            <Button onClick={toggleMute}>
-              {isMuted ? <IoVolumeMute /> : <IoVolumeHigh />}
-            </Button>
-          </ButtonTray>
+          <TimerTitle colour={primary}>{timeText}</TimerTitle>
+          <NumberInput colour={primary} value={timePeriods} increment={incrementTimePeriods} decrement={decrementTimePeriods}></NumberInput>
         </Inner>
       </TimerWheel>
+      <EndTime>End time: <span style={{ color: 'white' }}>{timePeriods > 0 ? timeToEnd : "00:00"}</span></EndTime>
     </Background>
   );
 }

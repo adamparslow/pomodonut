@@ -29,7 +29,7 @@ const useTimePeriods = () => {
    }
    let minutes = finishDate.getMinutes() >= 30 ? 30 : 0;
 
-   const timeToEnd = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')} ${end}`
+   const timeToEnd = `${hours}:${minutes.toString().padStart(2, '0')} ${end}`
 
    return { timePeriods, incrementTimePeriods, decrementTimePeriods, resetTimePeriods, timeToEnd };
 };

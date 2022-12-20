@@ -39,7 +39,7 @@ const Circle = styled.div`
 `;
 
 function TimerWheel(props) {
-   const percentage = props.percentage;
+   const percentage = 1 - ((1 - props.percentage) * 0.98);
    const degree = (percentage * 360 + 90) % 360;
 
    const wheelColour = props.wheelColour;
@@ -47,8 +47,6 @@ function TimerWheel(props) {
 
    const wheelRef = useRef();
    const circleRef = useRef();
-   console.log(wheelRef);
-   console.log(circleRef);
 
    let radius = 323.9;
    if (wheelRef.current) {
