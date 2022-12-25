@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 
 const useCountdownTimer = (callbacks) => {
    const [endTime, setEndTime] = useState(0);
+   const [duration, setDuration] = useState(0);
    const [timeLeft, setTimeLeft] = useState("00:00");
 
    const callbackQueue = callbacks;
@@ -28,8 +29,18 @@ const useCountdownTimer = (callbacks) => {
    }
 
    const setTimer = (minutes, seconds) => {
-      const milli = Date.now() + minutes * 60 * 1000 + seconds * 1000;
+      const newDuration = minutes * 60 * 1000 + seconds * 1000
+      const milli = Date.now() + newDuration;
+
       setEndTime(milli);
+      setDuration(newDuration);
+   };
+
+   const calculatePercentage = () => {
+      let remaining = endTime - Date.now();
+      if (remaining < 0) remaining = 0;
+
+      return (duration - remaining) / duration;
    };
 
    useEffect(() => {
@@ -41,7 +52,9 @@ const useCountdownTimer = (callbacks) => {
       updateTimeLeft();
    }, [endTime]);
 
-   return { timeLeft, setTimer };
+   const percentage = calculatePercentage();
+
+   return { timeLeft, setTimer, percentage };
 };
 
 export default useCountdownTimer;
