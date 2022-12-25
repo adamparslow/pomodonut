@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { getRemainingTimeAndType } from "../counter";
 
 const BREAK = "BREAK";
 const WORK = "WORK";
@@ -6,30 +7,30 @@ const WORK = "WORK";
 const WORK_LIMIT = 25 * 60;
 const BREAK_LIMIT = 5 * 60;
 
-const useTime = (setType) => {
+const useTime = () => {
    const [time, setTime] = useState(0);
+   const [type, setType] = useState(WORK);
+   const [isFirstDelayed, setIsFirstDelayed] = useState(false);
 
    const countdownTimer = () => {
-      const currentTime = new Date();
-      let minutes = currentTime.getMinutes() % 30;
-      const seconds = currentTime.getSeconds();
-      const timeInSeconds = minutes * 60 + seconds;
-      let remainingTime;
-      if (timeInSeconds < WORK_LIMIT) {
-         setType(WORK);
-         remainingTime = WORK_LIMIT - timeInSeconds;
-      } else {
-         setType(BREAK);
-         remainingTime = WORK_LIMIT + BREAK_LIMIT - timeInSeconds;
-      }
+      const { time, type } = getRemainingTimeAndType(new Date(), false);
 
-      setTime(remainingTime);
+      setTime(time);
+      setType(type);
    }
 
+   const setDelayedStart = () => {
+      setIsFirstDelayed(true);
+   };
+
    useEffect(() => {
-      const interval = setInterval(() => countdownTimer(), 1);
+      const interval = setInterval(countdownTimer, 1);
       return () => clearInterval(interval);
    }, []);
+
+   const link = document.querySelector("link[rel~='icon']");
+   link.href = type === WORK ? "orangeCircle.png" : "greenCircle.png";
+
 
    const minutesText = Math.floor(time / 60).toString();
    const secondsText = (time % 60).toString().padStart(2, "0");
@@ -37,7 +38,11 @@ const useTime = (setType) => {
    const timeText = `${minutesText}:${secondsText}`;
    document.title = timeText;
 
-   return { time, timeText }
+   const percentage = type === WORK ?
+      1 - time / WORK_LIMIT :
+      1 - time / BREAK_LIMIT;
+
+   return { timeText, type, percentage, setDelayedStart, isFirstDelayed }
 };
 
 export default useTime;

@@ -10,14 +10,12 @@ import styled from 'styled-components';
 import Button from './Button';
 import { FaUndoAlt, FaVolumeUp, FaVolumeMute } from 'react-icons/fa';
 
-const BREAK = "BREAK";
-const WORK = "WORK";
-
-const WORK_LIMIT = 25 * 60;
-const BREAK_LIMIT = 5 * 60;
-
 const colours = {
   "WORK": {
+    primary: "#ff7150",
+    background: "#ffaa4d"
+  },
+  "DELAYED START": {
     primary: "#ff7150",
     background: "#ffaa4d"
   },
@@ -88,21 +86,12 @@ const EndTime = styled.p`
 `;
 
 function App() {
-  const [type, setType] = useState(WORK);
-
-  const { time, timeText } = useTime(setType);
-  const { isMuted, toggleMute } = useIsMuted();
+  const { timeText, percentage, type, setDelayedStart, isFirstDelayed } = useTime();
   const { timePeriods, incrementTimePeriods, decrementTimePeriods, resetTimePeriods, timeToEnd } = useTimePeriods();
-
-
-  const percentage = timePeriods > 0 ? type === WORK ?
-    1 - time / WORK_LIMIT :
-    1 - time / BREAK_LIMIT : 0;
-  const link = document.querySelector("link[rel~='icon']");
-  link.href = type === WORK ? "orangeCircle.png" : "greenCircle.png";
+  const { isMuted, toggleMute } = useIsMuted();
 
   useEffect(() => {
-    if (type === WORK) {
+    if (type === "WORK") {
       decrementTimePeriods();
     }
 
@@ -124,8 +113,10 @@ function App() {
         <Button colour={primary} onClick={toggleMute}>
           {isMuted ? <FaVolumeMute /> : <FaVolumeUp />}
         </Button>
+        <button onClick={setDelayedStart}>Delay Start</button>
+        <p>{isFirstDelayed ? "yes" : "no"}</p>
       </ButtonTray>
-      <TimerWheel percentage={percentage} wheelColour={primary} backgroundColour={background}>
+      <TimerWheel percentage={timePeriods > 0 ? percentage : 0} wheelColour={primary} backgroundColour={background}>
         <Inner>
           <TypeTitle>{timePeriods > 0 ? type : "Set value to start"}</TypeTitle>
           <TimerTitle colour={primary} style={{ opacity: timePeriods > 0 ? '100%' : '50%' }}>{timeText}</TimerTitle>
