@@ -1,11 +1,10 @@
 import './App.css';
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import TimerWheel from './TimerWheel';
 import NumberInput from './NumberInput';
 import useTimePeriods from './hooks/useTimePeriods';
 import useIsMuted from './hooks/useIsMuted';
 import useTime from './hooks/useTime';
-import { alert } from './playSound';
 import styled from 'styled-components';
 import Button from './Button';
 import { FaUndoAlt, FaVolumeUp, FaVolumeMute } from 'react-icons/fa';
@@ -88,20 +87,15 @@ const EndTime = styled.p`
 function App() {
   const { timeText, percentage, type, setDelayedStart, isFirstDelayed } = useTime();
   const { timePeriods, incrementTimePeriods, decrementTimePeriods, resetTimePeriods, timeToEnd } = useTimePeriods();
-  const { isMuted, toggleMute } = useIsMuted();
+  const { isMuted, toggleMute, playAlert } = useIsMuted();
 
   useEffect(() => {
     if (type === "WORK") {
       decrementTimePeriods();
     }
 
-    playSound();
-  }, [type]);
-
-  const playSound = () => {
-    if (isMuted || timePeriods === 0) return;
-    alert();
-  }
+    playAlert();
+  }, [type, decrementTimePeriods, playAlert]);
 
   const background = colours[type].background;
   const primary = colours[type].primary;
