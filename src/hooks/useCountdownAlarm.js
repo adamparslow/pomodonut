@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-const useCountdownTimer = (callbacks) => {
+const useCountdownAlarm = (callbacks) => {
    const [endTime, setEndTime] = useState(0);
    const [duration, setDuration] = useState(0);
    const [timeLeft, setTimeLeft] = useState("00:00");
@@ -20,19 +20,23 @@ const useCountdownTimer = (callbacks) => {
    };
 
    const updateTimeLeft = () => {
-      const diffMilli = endTime - Date.now();
-      const difference = diffMilli >= 0 ? new Date(endTime - Date.now()) : new Date(0);
+      let diffMilli = endTime - Date.now();
+      const milli = diffMilli % 1000;
+      if (milli > 0) {
+         diffMilli -= milli;
+         diffMilli += 1000;
+      }
+      const difference = diffMilli >= 0 ? new Date(diffMilli) : new Date(0);
       const minutes = difference.getMinutes();
       const seconds = difference.getSeconds().toString().padStart(2, '0');
 
       setTimeLeft(`${minutes}:${seconds}`);
    }
 
-   const setTimer = (minutes, seconds) => {
-      const newDuration = minutes * 60 * 1000 + seconds * 1000
-      const milli = Date.now() + newDuration;
+   const setAlarm = (alarmDate) => {
+      setEndTime(alarmDate.getTime());
 
-      setEndTime(milli);
+      const newDuration = alarmDate.getTime() - Date.now();
       setDuration(newDuration);
    };
 
@@ -54,7 +58,7 @@ const useCountdownTimer = (callbacks) => {
 
    const percentage = calculatePercentage();
 
-   return { timeLeft, setTimer, percentage };
+   return { timeLeft, setAlarm, percentage };
 };
 
-export default useCountdownTimer;
+export default useCountdownAlarm;
