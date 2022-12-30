@@ -1,5 +1,5 @@
-import { renderHook, act, findAllByRole } from '@testing-library/react'
-import useClockState, { ClockState, Mode } from './useClockState';
+import { renderHook, act } from '@testing-library/react'
+import useClockState, { ClockState } from './useClockState';
 
 it('has correct interface', () => {
    const { result } = renderHook(() => useClockState());
