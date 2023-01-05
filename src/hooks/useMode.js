@@ -46,7 +46,7 @@ const useMode = () => {
       const minutes = now.getMinutes() % 30;
       const seconds = now.getSeconds();
       const timeToRemove =
-         mode !== Mode.NORMAL ? minutes * 60 * 1000 - seconds * 1000 : 0;
+         mode !== Mode.NORMAL ? minutes * 60 * 1000 + seconds * 1000 : 0;
 
       const timeToAdd = mode === Mode.DELAYED ? 30 * 60 * 1000 : 0;
 

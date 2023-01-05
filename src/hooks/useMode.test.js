@@ -35,7 +35,7 @@ it("rotates correctly", () => {
 
 describe("timeToEnd", () => {
    beforeAll(() => {
-      jest.useFakeTimers().setSystemTime(new Date("2022-02-02 11:11"));
+      jest.useFakeTimers().setSystemTime(new Date("2022-02-02 11:11:31"));
    });
 
    it("returns 0:00 for no time periods", () => {
@@ -91,7 +91,7 @@ describe("timeToEnd", () => {
 
 describe("endOfWork", () => {
    beforeAll(() => {
-      jest.useFakeTimers().setSystemTime(new Date("2022-02-02 11:11"));
+      jest.useFakeTimers().setSystemTime(new Date("2022-02-02 11:11:31"));
    });
 
    it("returns 11:25 for PARTIAL mode", () => {
@@ -107,7 +107,7 @@ describe("endOfWork", () => {
       act(() => result.current.rotateMode());
 
       expect(result.current.endOfWork()).toStrictEqual(
-         new Date("2022-02-02 11:36")
+         new Date("2022-02-02 11:36:31")
       );
    });
 
@@ -124,7 +124,7 @@ describe("endOfWork", () => {
 
 describe("endOfBreak", () => {
    beforeAll(() => {
-      jest.useFakeTimers().setSystemTime(new Date("2022-02-02 11:11"));
+      jest.useFakeTimers().setSystemTime(new Date("2022-02-02 11:11:31"));
    });
 
    it("returns 11:30 for PARTIAL mode", () => {
@@ -140,7 +140,7 @@ describe("endOfBreak", () => {
       act(() => result.current.rotateMode());
 
       expect(result.current.endOfBreak()).toStrictEqual(
-         new Date("2022-02-02 11:41")
+         new Date("2022-02-02 11:41:31")
       );
    });
 
