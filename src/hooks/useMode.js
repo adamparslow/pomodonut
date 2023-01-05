@@ -3,13 +3,13 @@ import { useState } from "react";
 export const Mode = {
    NORMAL: "Normal",
    DELAYED: "Delayed",
-   PARTIAL: "Partial"
+   PARTIAL: "Partial",
 };
 
 const WORK_TIME_LENGTH = 25;
 const FULL_TIME_LENGTH = 30;
 
-const useMode = (timePeriods) => {
+const useMode = () => {
    const [mode, setMode] = useState(Mode.PARTIAL);
 
    const rotateMode = () => {
@@ -20,9 +20,9 @@ const useMode = (timePeriods) => {
       } else {
          setMode(Mode.PARTIAL);
       }
-   }
+   };
 
-   const timeToEnd = () => {
+   const timeToEnd = (timePeriods) => {
       if (timePeriods === 0) {
          return "0:00";
       }
@@ -30,14 +30,11 @@ const useMode = (timePeriods) => {
       const endTime = endOfTimeBlocks(FULL_TIME_LENGTH, timePeriods);
 
       return endTime
-         .toLocaleString(
-            'en-US',
-            {
-               hour: 'numeric',
-               minute: 'numeric',
-               hour12: true
-            }
-         )
+         .toLocaleString("en-US", {
+            hour: "numeric",
+            minute: "numeric",
+            hour12: true,
+         })
          .toLowerCase();
    };
 
@@ -48,17 +45,17 @@ const useMode = (timePeriods) => {
       const now = new Date();
       const minutes = now.getMinutes() % 30;
       const seconds = now.getSeconds();
-      const timeToRemove = mode !== Mode.NORMAL
-         ? minutes * 60 * 1000 - seconds * 1000
-         : 0;
+      const timeToRemove =
+         mode !== Mode.NORMAL ? minutes * 60 * 1000 - seconds * 1000 : 0;
 
-      const timeToAdd = mode === Mode.DELAYED
-         ? 30 * 60 * 1000 : 0;
+      const timeToAdd = mode === Mode.DELAYED ? 30 * 60 * 1000 : 0;
 
-      const endTime = new Date(now.getTime() - timeToRemove + amount * length * 60 * 1000 + timeToAdd);
+      const endTime = new Date(
+         now.getTime() - timeToRemove + amount * length * 60 * 1000 + timeToAdd
+      );
 
       return endTime;
-   }
+   };
 
    return { timeToEnd, endOfWork, endOfBreak, mode, rotateMode };
 };

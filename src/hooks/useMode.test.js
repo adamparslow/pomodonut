@@ -2,7 +2,7 @@ import { renderHook, act } from "@testing-library/react";
 import useMode, { Mode } from "./useMode";
 
 it("has correct interface", () => {
-   const { result } = renderHook(() => useMode(0));
+   const { result } = renderHook(() => useMode());
 
    expect(result.current.timeToEnd).not.toBeUndefined();
    expect(result.current.endOfWork).not.toBeUndefined();
@@ -12,13 +12,13 @@ it("has correct interface", () => {
 });
 
 it("starts with PARTIAL mode", () => {
-   const { result } = renderHook(() => useMode(0));
+   const { result } = renderHook(() => useMode());
 
    expect(result.current.mode).toBe(Mode.PARTIAL);
 });
 
 it("rotates correctly", () => {
-   const { result } = renderHook(() => useMode(0));
+   const { result } = renderHook(() => useMode());
 
    act(() => result.current.rotateMode());
 
@@ -39,9 +39,9 @@ describe("timeToEnd", () => {
    });
 
    it("returns 0:00 for no time periods", () => {
-      const { result } = renderHook(() => useMode(0));
+      const { result } = renderHook(() => useMode());
 
-      expect(result.current.timeToEnd()).toBe("0:00");
+      expect(result.current.timeToEnd(0)).toBe("0:00");
    });
 
    it.each([
@@ -53,9 +53,9 @@ describe("timeToEnd", () => {
    ])(
       "shows correct time for PARTIAL mode for %1 time period",
       (timePeriod, expectedTimeToEnd) => {
-         const { result } = renderHook(() => useMode(timePeriod));
+         const { result } = renderHook(() => useMode());
 
-         expect(result.current.timeToEnd()).toBe(expectedTimeToEnd);
+         expect(result.current.timeToEnd(timePeriod)).toBe(expectedTimeToEnd);
       }
    );
 
@@ -66,10 +66,10 @@ describe("timeToEnd", () => {
    ])(
       "shows correct time for NORMAL mode for %1 time period",
       (timePeriod, expectedTimeToEnd) => {
-         const { result } = renderHook(() => useMode(timePeriod));
+         const { result } = renderHook(() => useMode());
          act(() => result.current.rotateMode());
 
-         expect(result.current.timeToEnd()).toBe(expectedTimeToEnd);
+         expect(result.current.timeToEnd(timePeriod)).toBe(expectedTimeToEnd);
       }
    );
 
@@ -80,11 +80,11 @@ describe("timeToEnd", () => {
    ])(
       "shows correct time for DELAYED mode for %1 time period",
       (timePeriod, expectedTimeToEnd) => {
-         const { result } = renderHook(() => useMode(timePeriod));
+         const { result } = renderHook(() => useMode());
          act(() => result.current.rotateMode());
          act(() => result.current.rotateMode());
 
-         expect(result.current.timeToEnd()).toBe(expectedTimeToEnd);
+         expect(result.current.timeToEnd(timePeriod)).toBe(expectedTimeToEnd);
       }
    );
 });
@@ -95,7 +95,7 @@ describe("endOfWork", () => {
    });
 
    it("returns 11:25 for PARTIAL mode", () => {
-      const { result } = renderHook(() => useMode(0));
+      const { result } = renderHook(() => useMode());
 
       expect(result.current.endOfWork()).toStrictEqual(
          new Date("2022-02-02 11:25")
@@ -103,7 +103,7 @@ describe("endOfWork", () => {
    });
 
    it("returns 11:36 for NORMAL mode", () => {
-      const { result } = renderHook(() => useMode(0));
+      const { result } = renderHook(() => useMode());
       act(() => result.current.rotateMode());
 
       expect(result.current.endOfWork()).toStrictEqual(
@@ -112,7 +112,7 @@ describe("endOfWork", () => {
    });
 
    it("returns 11:55 for DELAYED mode", () => {
-      const { result } = renderHook(() => useMode(0));
+      const { result } = renderHook(() => useMode());
       act(() => result.current.rotateMode());
       act(() => result.current.rotateMode());
 
