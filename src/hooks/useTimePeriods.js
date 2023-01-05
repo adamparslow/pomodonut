@@ -4,7 +4,7 @@ const useTimePeriods = () => {
    const [timePeriods, setTimePeriods] = useState(0);
 
    const increment = () => {
-      setTimePeriods(parseInt(timePeriods) + 1);
+      setTimePeriods(timePeriods + 1);
    };
 
    const decrement = () => {
@@ -32,7 +32,7 @@ const useTimePeriods = () => {
    // const timeToEnd = `${hours}:${minutes.toString().padStart(2, '0')} ${end}`
 
    return {
-      value: timePeriods,
+      timePeriods,
       increment,
       decrement,
       reset,
