@@ -97,6 +97,13 @@ function App() {
 
    const startClock = () => {
       clockState.start();
+      if (mode !== Mode.NORMAL) {
+         const end =
+            clockState.clockState === ClockState.WORK
+               ? endOfWork()
+               : endOfBreak();
+         setAlarm(end);
+      }
    };
 
    const stopClock = () => {
@@ -132,7 +139,6 @@ function App() {
             clockState.clockState === ClockState.WORK
                ? endOfWork()
                : endOfBreak();
-         console.log(end);
          setAlarm(end);
       }
       prevClockState.current = clockState.clockState;
@@ -171,9 +177,6 @@ function App() {
             <Button colour={primary} onClick={toggleMute}>
                {isMuted ? <FaVolumeMute /> : <FaVolumeUp />}
             </Button>
-            <Pill colour={primary} onClick={rotateMode} disabled={isRunning()}>
-               {mode}
-            </Pill>
          </ButtonTray>
          <TimerWheel
             percentage={isRunning() ? percentage : 0}
@@ -196,6 +199,13 @@ function App() {
                   increment={increment}
                   decrement={decrement}
                ></NumberInput>
+               <Pill
+                  colour={primary}
+                  onClick={rotateMode}
+                  disabled={isRunning()}
+               >
+                  {mode}
+               </Pill>
             </Inner>
          </TimerWheel>
          <EndTime>

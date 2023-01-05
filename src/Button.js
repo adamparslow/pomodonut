@@ -36,6 +36,8 @@ const Button = styled.button`
 
 export const Pill = styled(Button)`
    border-radius: 30px;
+
+   padding: 20px;
 `;
 
 export default Button;
