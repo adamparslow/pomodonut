@@ -18,6 +18,8 @@ const Gap = styled.div`
    height: 85%;
    width: 85%;
 
+   z-index: 1;
+
    border-radius: 50%;
 
    display: flex;
@@ -81,7 +83,6 @@ function TimerWheel(props) {
             <Circle
                style={{
                   backgroundColor: wheelColour,
-                  zIndex: 10,
                }}
             ></Circle>
          </Rotator>

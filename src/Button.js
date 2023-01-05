@@ -4,18 +4,20 @@ const Button = styled.button`
    background: none;
    font-size: 1.5em;
    height: 2em;
-   aspect-ratio: 1;
-   padding: 0;
+   padding-inline: 11px;
+   /* aspect-ratio: 1; */
    border-radius: 50%;
    text-align: center;
    border: none;
    color: white;
 
-   background-color: ${props => props.colour};
+   background-color: ${(props) => props.colour};
 
-   display:flex;
+   display: flex;
    justify-content: center;
    align-items: center;
+
+   font-family: "Arial Rounded MT Bold", sans-serif;
 
    cursor: pointer;
 
@@ -26,6 +28,14 @@ const Button = styled.button`
    &:active {
       background-color: grey;
    }
+
+   &:disabled {
+      background-color: darkcyan;
+   }
+`;
+
+export const Pill = styled(Button)`
+   border-radius: 30px;
 `;
 
 export default Button;

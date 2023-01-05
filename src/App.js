@@ -1,26 +1,28 @@
 import "./App.css";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import TimerWheel from "./TimerWheel";
 import NumberInput from "./NumberInput";
 import useTimePeriods from "./hooks/useTimePeriods";
 import useIsMuted from "./hooks/useIsMuted";
-import useTime from "./hooks/useTime";
+import useCountdownAlarm from "./hooks/useCountdownAlarm";
 import styled from "styled-components";
-import Button from "./Button";
+import Button, { Pill } from "./Button";
 import { FaUndoAlt, FaVolumeUp, FaVolumeMute } from "react-icons/fa";
+import useMode, { Mode } from "./hooks/useMode";
+import useClockState, { ClockState } from "./hooks/useClockState";
 
 const colours = {
-   WORK: {
+   Work: {
       primary: "#ff7150",
       background: "#ffaa4d",
    },
-   "DELAYED START": {
-      primary: "#ff7150",
-      background: "#ffaa4d",
-   },
-   BREAK: {
+   Break: {
       primary: "#54b574",
       background: "#95d8c2",
+   },
+   None: {
+      primary: "#ff7150",
+      background: "#ffaa4d",
    },
 };
 
@@ -85,21 +87,80 @@ const EndTime = styled.p`
 `;
 
 function App() {
-   const { timeText, percentage, type, setDelayedStart, isFirstDelayed } =
-      useTime();
-   const { value, increment, decrement, reset, timeToEnd } = useTimePeriods();
+   const endOfAlarm = () => {
+      clockState.transition();
+
+      if (isRunning()) {
+         playAlert();
+      }
+   };
+
+   const startClock = () => {
+      clockState.start();
+   };
+
+   const stopClock = () => {
+      stopAlarm();
+      clockState.end();
+   };
+
+   const { timePeriods, increment, decrement, reset, isRunning } =
+      useTimePeriods();
+   const { timeToEnd, endOfWork, endOfBreak, mode, rotateMode } = useMode();
+   const { timeLeft, setAlarm, stopAlarm, percentage } = useCountdownAlarm([
+      endOfAlarm,
+   ]);
    const { isMuted, toggleMute, playAlert } = useIsMuted();
 
+   const clockState = useClockState();
+   const prevClockState = useRef();
+   const wasRunning = useRef();
+
+   document.title = timeLeft;
+
    useEffect(() => {
-      if (type === "WORK") {
+      console.log(clockState.clockState);
+      if (
+         clockState.clockState === ClockState.WORK &&
+         prevClockState.current === ClockState.BREAK
+      ) {
          decrement();
       }
 
-      // playAlert();
-   }, [type, decrement, playAlert]);
+      if (clockState.clockState !== ClockState.NONE) {
+         const end =
+            clockState.clockState === ClockState.WORK
+               ? endOfWork()
+               : endOfBreak();
+         console.log(end);
+         setAlarm(end);
+      }
+      prevClockState.current = clockState.clockState;
+   }, [clockState.clockState]);
 
-   const background = colours[type].background;
-   const primary = colours[type].primary;
+   useEffect(() => {
+      if (mode !== Mode.NORMAL) {
+         startClock();
+      } else {
+         stopClock();
+      }
+   }, [mode]);
+
+   useEffect(() => {
+      if (mode === Mode.NORMAL) {
+         if (isRunning() && !wasRunning.current) {
+            startClock();
+            wasRunning.current = true;
+         } else if (!isRunning()) {
+            stopClock();
+            wasRunning.current = false;
+         }
+      }
+      console.log("Time period changed");
+   }, [timePeriods]);
+
+   const background = colours[clockState.clockState].background;
+   const primary = colours[clockState.clockState].primary;
 
    return (
       <Background style={{ backgroundColor: background }}>
@@ -110,25 +171,28 @@ function App() {
             <Button colour={primary} onClick={toggleMute}>
                {isMuted ? <FaVolumeMute /> : <FaVolumeUp />}
             </Button>
-            <button onClick={setDelayedStart}>Delay Start</button>
-            <p>{isFirstDelayed ? "yes" : "no"}</p>
+            <Pill colour={primary} onClick={rotateMode} disabled={isRunning()}>
+               {mode}
+            </Pill>
          </ButtonTray>
          <TimerWheel
-            percentage={percentage}
+            percentage={isRunning() ? percentage : 0}
             wheelColour={primary}
             backgroundColour={background}
          >
             <Inner>
-               <TypeTitle>{value > 0 ? type : "Set value to start"}</TypeTitle>
+               <TypeTitle>
+                  {isRunning() ? clockState.clockState : "Set value to start"}
+               </TypeTitle>
                <TimerTitle
                   colour={primary}
-                  style={{ opacity: value > 0 ? "100%" : "50%" }}
+                  style={{ opacity: isRunning() ? "100%" : "50%" }}
                >
-                  {timeText}
+                  {mode === Mode.NORMAL && !isRunning() ? "25:00" : timeLeft}
                </TimerTitle>
                <NumberInput
                   colour={primary}
-                  value={value}
+                  value={timePeriods}
                   increment={increment}
                   decrement={decrement}
                ></NumberInput>
@@ -137,7 +201,7 @@ function App() {
          <EndTime>
             End time:{" "}
             <span style={{ color: "white" }}>
-               {value > 0 ? timeToEnd : "00:00"}
+               {isRunning() ? timeToEnd(timePeriods) : "0:00"}
             </span>
          </EndTime>
       </Background>
