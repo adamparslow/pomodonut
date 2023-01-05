@@ -16,6 +16,10 @@ const useTimePeriods = () => {
       setTimePeriods(0);
    };
 
+   const isRunning = () => {
+      return timePeriods > 0;
+   };
+
    // const finishDate = new Date(Date.now() + 30 * timePeriods * 60 * 1000);
    // let end = "am";
    // let hours = finishDate.getHours();
@@ -36,6 +40,7 @@ const useTimePeriods = () => {
       increment,
       decrement,
       reset,
+      isRunning,
    };
 };
 

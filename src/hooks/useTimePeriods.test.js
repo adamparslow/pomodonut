@@ -8,6 +8,7 @@ it("has correct interface", () => {
    expect(result.current.increment).not.toBeUndefined();
    expect(result.current.decrement).not.toBeUndefined();
    expect(result.current.reset).not.toBeUndefined();
+   expect(result.current.isRunning).not.toBeUndefined();
 });
 
 it("starts with value 0", () => {
@@ -78,5 +79,20 @@ describe(".reset", () => {
       act(() => result.current.reset());
 
       expect(result.current.timePeriods).toBe(0);
+   });
+});
+
+describe(".isRunning", () => {
+   it("is false when timePeriods = 0", () => {
+      const { result } = renderHook(() => useTimePeriods());
+
+      expect(result.current.isRunning()).toBe(false);
+   });
+
+   it("is true when timePeriods > 0", () => {
+      const { result } = renderHook(() => useTimePeriods());
+      act(() => result.current.increment());
+
+      expect(result.current.isRunning()).toBe(true);
    });
 });
