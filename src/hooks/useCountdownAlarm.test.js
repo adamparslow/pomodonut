@@ -1,13 +1,11 @@
-import { renderHook, act } from '@testing-library/react'
-import useCountdownAlarm from './useCountdownAlarm';
+import { renderHook, act } from "@testing-library/react";
+import useCountdownAlarm from "./useCountdownAlarm";
 
 beforeEach(() => {
-   jest
-      .useFakeTimers()
-      .setSystemTime(new Date('2022-02-02 12:00'));
+   jest.useFakeTimers().setSystemTime(new Date("2022-02-02 12:00"));
 });
 
-it('has the correct interface', () => {
+it("has the correct interface", () => {
    const { result } = renderHook(() => useCountdownAlarm(jest.fn()));
 
    expect(result.current.timeLeft).not.toBeUndefined();
@@ -16,9 +14,9 @@ it('has the correct interface', () => {
 });
 
 it.each([
-   ['2022-02-02 12:00', '0:00'],
-   ['2022-02-02 12:14:11', '14:11'],
-])('sets end time correctly', (time, expectedTimeLeft) => {
+   ["2022-02-02 12:00", "0:00"],
+   ["2022-02-02 12:14:11", "14:11"],
+])("sets end time correctly", (time, expectedTimeLeft) => {
    const { result } = renderHook(() => useCountdownAlarm(jest.fn()));
 
    act(() => {
@@ -38,15 +36,29 @@ it.each([
    [190, "0:00"],
    [191, "0:00"],
    [200, "0:00"],
-])('timer goes down by %i', (secondsDown, expectedTimeLeft) => {
+])("timer goes down by %i", (secondsDown, expectedTimeLeft) => {
    const { result } = renderHook(() => useCountdownAlarm(jest.fn()));
 
    act(() => {
-      result.current.setAlarm(new Date('2022-02-02 12:03:10'));
+      result.current.setAlarm(new Date("2022-02-02 12:03:10"));
       jest.advanceTimersByTime(secondsDown * 1000);
    });
 
    expect(result.current.timeLeft).toBe(expectedTimeLeft);
+});
+
+it("stops the alarm", () => {
+   const { result } = renderHook(() => useCountdownAlarm(jest.fn()));
+
+   act(() => {
+      result.current.setAlarm(new Date("2022-02-02 12:03:10"));
+   });
+   act(() => {
+      result.current.stopAlarm();
+   });
+
+   expect(result.current.timeLeft).toBe("0:00");
+   expect(result.current.percentage).toBe(0);
 });
 
 it.each([
@@ -55,22 +67,22 @@ it.each([
    [10, 0.1],
    [11, 0.11],
    [60, 0.6],
-   [100, 1],
-   [190, 1],
-   [191, 1],
-   [200, 1],
-])('percentage goes down by %i', (secondsDown, expectedPercentage) => {
+   [100, 0],
+   [190, 0],
+   [191, 0],
+   [200, 0],
+])("percentage goes down by %i", (secondsDown, expectedPercentage) => {
    const { result } = renderHook(() => useCountdownAlarm(jest.fn()));
 
    act(() => {
-      result.current.setAlarm(new Date('2022-02-02 12:01:40'));
+      result.current.setAlarm(new Date("2022-02-02 12:01:40"));
       jest.advanceTimersByTime(secondsDown * 1000);
    });
 
    expect(result.current.percentage).toBe(expectedPercentage);
 });
 
-describe.each([1, 2, 3])('callbacks with length %i', (noOfCallbacks) => {
+describe.each([1, 2, 3])("callbacks with length %i", (noOfCallbacks) => {
    const setupCallbacks = () => {
       const callbacks = [];
       for (let i = 0; i < noOfCallbacks; i++) {
@@ -80,38 +92,38 @@ describe.each([1, 2, 3])('callbacks with length %i', (noOfCallbacks) => {
       return callbacks;
    };
 
-   it('callback doesn\'t run whilst the timer is still going', () => {
+   it("callback doesn't run whilst the timer is still going", () => {
       const callbacks = setupCallbacks();
       const { result } = renderHook(() => useCountdownAlarm(callbacks));
 
       act(() => {
-         result.current.setAlarm(new Date('2022-02-02 12:01'));
+         result.current.setAlarm(new Date("2022-02-02 12:01"));
       });
 
-      callbacks.map(callback => expect(callback).not.toHaveBeenCalled());
+      callbacks.map((callback) => expect(callback).not.toHaveBeenCalled());
    });
 
-   it('runs callback when timer runs out', () => {
+   it("runs callback when timer runs out", () => {
       const callbacks = setupCallbacks();
       const { result } = renderHook(() => useCountdownAlarm(callbacks));
 
       act(() => {
-         result.current.setAlarm(new Date('2022-02-02 12:01'));
+         result.current.setAlarm(new Date("2022-02-02 12:01"));
          jest.advanceTimersByTime(1000);
       });
 
-      callbacks.map(callback => expect(callback).toHaveBeenCalled());
+      callbacks.map((callback) => expect(callback).toHaveBeenCalled());
    });
 
-   it('doesn\'t repeat callback', () => {
+   it("doesn't repeat callback", () => {
       const callbacks = setupCallbacks();
       const { result } = renderHook(() => useCountdownAlarm(callbacks));
 
       act(() => {
-         result.current.setAlarm(new Date('2022-02-02 12:01'));
+         result.current.setAlarm(new Date("2022-02-02 12:01"));
          jest.advanceTimersByTime(3000);
       });
 
-      callbacks.map(callback => expect(callback).toHaveBeenCalledTimes(1));
+      callbacks.map((callback) => expect(callback).toHaveBeenCalledTimes(1));
    });
 });

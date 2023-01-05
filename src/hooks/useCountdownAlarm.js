@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 const useCountdownAlarm = (callbacks) => {
    const [endTime, setEndTime] = useState(0);
    const [duration, setDuration] = useState(0);
-   const [timeLeft, setTimeLeft] = useState("00:00");
+   const [timeLeft, setTimeLeft] = useState("0:00");
 
    const callbackQueue = callbacks;
 
@@ -28,10 +28,10 @@ const useCountdownAlarm = (callbacks) => {
       }
       const difference = diffMilli >= 0 ? new Date(diffMilli) : new Date(0);
       const minutes = difference.getMinutes();
-      const seconds = difference.getSeconds().toString().padStart(2, '0');
+      const seconds = difference.getSeconds().toString().padStart(2, "0");
 
       setTimeLeft(`${minutes}:${seconds}`);
-   }
+   };
 
    const setAlarm = (alarmDate) => {
       setEndTime(alarmDate.getTime());
@@ -40,17 +40,27 @@ const useCountdownAlarm = (callbacks) => {
       setDuration(newDuration);
    };
 
+   const stopAlarm = () => {
+      setEndTime(new Date());
+      setDuration(0);
+   };
+
    const calculatePercentage = () => {
+      if (duration === 0) return 0;
+
       let remaining = endTime - Date.now();
       if (remaining < 0) remaining = 0;
 
-      return (duration - remaining) / duration;
+      let percentage = (duration - remaining) / duration;
+      if (percentage === 1) percentage = 0;
+
+      return percentage;
    };
 
    useEffect(() => {
-      const interval = setInterval(clockTick, 200);
+      const interval = setInterval(clockTick, 1000);
       return () => clearInterval(interval);
-   }, []);
+   }, [endTime]);
 
    useEffect(() => {
       updateTimeLeft();
@@ -58,7 +68,7 @@ const useCountdownAlarm = (callbacks) => {
 
    const percentage = calculatePercentage();
 
-   return { timeLeft, setAlarm, percentage };
+   return { timeLeft, setAlarm, stopAlarm, percentage };
 };
 
 export default useCountdownAlarm;
